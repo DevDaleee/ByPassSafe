@@ -1,2 +1,0 @@
-[console_scripts]
-ByPassSafe = ByPassSafe.main:main
