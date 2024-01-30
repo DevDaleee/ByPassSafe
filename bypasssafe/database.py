@@ -7,10 +7,23 @@ from ByPassSafe.account import Account
 
 
 class Database:
+    """
+    Classe para interação com o banco de dados.
+
+    Esta classe contém métodos para salvar contas, buscar contas associadas a um mestre,
+    autenticar usuários e obter informações de uma conta por nome de usuário.
+    """
+
     DATABASE_URL = "postgres://lfusjels:57VUWL0RGqHFJEsJuYX8L3iuesufDE4n@kesavan.db.elephantsql.com/lfusjels"
 
     @staticmethod
     def save_account(account):
+        """
+        Salva uma conta no banco de dados.
+
+        Args:
+            account (Account): A conta a ser salva no banco de dados.
+        """
         try:
             connection = psycopg2.connect(Database.DATABASE_URL)
             cursor = connection.cursor()
@@ -38,6 +51,15 @@ class Database:
 
     @staticmethod
     def get_accounts_by_master_id(master_id):
+        """
+        Obtém todas as contas associadas a um mestre.
+
+        Args:
+            master_id (int): O ID do mestre para o qual as contas estão associadas.
+
+        Returns:
+            list: Uma lista de tuples representando as contas associadas ao mestre.
+        """
         connection = psycopg2.connect(Database.DATABASE_URL)
         cursor = connection.cursor()
 
@@ -50,7 +72,18 @@ class Database:
 
         return accounts
 
+    @staticmethod
     def authenticate_user(email, password):
+        """
+        Autentica um usuário comparando email e senha com o banco de dados.
+
+        Args:
+            email (str): O email do usuário.
+            password (str): A senha do usuário.
+
+        Returns:
+            int or None: O ID do mestre se a autenticação for bem-sucedida, None caso contrário.
+        """
         connection = psycopg2.connect(Database.DATABASE_URL)
         cursor = connection.cursor()
 
@@ -70,6 +103,16 @@ class Database:
 
     @staticmethod
     def get_account_by_username(master_id, username):
+        """
+        Obtém informações de uma conta por nome de usuário.
+
+        Args:
+            master_id (int): O ID do mestre ao qual a conta está associada.
+            username (str): O nome de usuário da conta.
+
+        Returns:
+            Account or None: A conta correspondente se encontrada, None caso contrário.
+        """
         connection = psycopg2.connect(Database.DATABASE_URL)
         cursor = connection.cursor()
 

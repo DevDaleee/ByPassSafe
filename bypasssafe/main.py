@@ -2,10 +2,19 @@
 from ByPassSafe.account import MasterAccount, Account
 from ByPassSafe.database import Database
 from ByPassSafe.pass_gen import PasswordGenerator
-import os, time
-
+import os
+import time
 
 def login(cached_email=None):
+    """
+    Realiza o processo de login do usuário.
+
+    Args:
+        cached_email (str): O email armazenado em cache. Pode ser None se não houver nenhum em cache.
+
+    Returns:
+        tuple: Uma tupla contendo o ID do mestre e o email do usuário logado. Retorna (None, None) em caso de falha no login.
+    """
     email = input("Email: ")
     password = input("Senha Mestre: ")
 
@@ -21,8 +30,12 @@ def login(cached_email=None):
         print(f"Um erro ocorreu durante o login: {e}")
         return None, None
 
-
 def create_master_account():
+    """
+    Cria uma conta mestre no sistema.
+
+    Solicita informações do usuário, cria uma conta mestre e a salva no banco de dados.
+    """
     username = input("Digite seu nome: ")
     email = input("Digite seu Email: ")
     password = input("Digite sua senha mestra: ")
@@ -37,8 +50,15 @@ def create_master_account():
     except Exception as e:
         print(f"ERRO: {e}")
 
-
 def create_account(master_id):
+    """
+    Cria uma nova conta associada à conta mestre fornecida.
+
+    Solicita informações do usuário, cria uma conta e a salva no banco de dados.
+
+    Args:
+        master_id (int): O ID da conta mestre à qual a nova conta será associada.
+    """
     username = input("Digite o username: ")
     email = input("Digite o email: ")
     choice = input("Deseja digitar ou gerar uma senha? (1 - Digitar / 2 - Gerar): ")
@@ -54,23 +74,31 @@ def create_account(master_id):
     account = Account(master_id, username, password, email)
     Database.save_account(account)
 
-
 def generate_password():
+    """
+    Gera uma senha aleatória com base nas preferências do usuário.
+
+    Retorna:
+        str: A senha gerada.
+    """
     password_generator = PasswordGenerator()
     length = int(input("Qual o tamanho da senha: "))
     digits = int(input("Digite a quantidade de números: "))
     symbols = int(input("Digite a quantidade de símbolos: "))
-    uppercase = (
-        input("Deseja misturar letras maiúsculas com minúsculas? (S/N): ").lower()
-        == "S"
-    )
+    uppercase = (input("Deseja misturar letras maiúsculas com minúsculas? (S/N): ").lower() == "S")
 
     password = password_generator.generate_password(length, digits, symbols, uppercase)
     print(f"Senha Gerada: {password}")
     return password
 
-
 def search_account(master_id, username_to_search):
+    """
+    Procura e exibe informações sobre uma conta associada à conta mestre.
+
+    Args:
+        master_id (int): O ID da conta mestre à qual a conta a ser pesquisada está associada.
+        username_to_search (str): O nome de usuário da conta a ser pesquisada.
+    """
     try:
         account = Database.get_account_by_username(master_id, username_to_search)
         if account:
@@ -86,15 +114,18 @@ def search_account(master_id, username_to_search):
         print(f"Erro durante a pesquisa: {e}")
         input("Pressione Enter para voltar ao menu...")
 
-
 def clear_console():
+    """Limpa a tela do console."""
     os.system("cls" if os.name == "nt" else "clear")
-
 
 cached_email = None
 
-
 def main():
+    """
+    Função principal do programa.
+
+    Controla o fluxo principal do programa, incluindo a exibição de menus, chamadas de funções e interações com o usuário.
+    """
     global cached_email
 
     master_id = None
@@ -124,9 +155,7 @@ def main():
 
         if choice == "1":
             create_account(master_id)
-            time.sleep(
-                2
-            )  # Aguarda 2 segundos antes de limpar o console e mostrar o próximo menu
+            time.sleep(2)  # Aguarda 2 segundos antes de limpar o console e mostrar o próximo menu
         elif choice == "2":
             generate_password()
             time.sleep(2)
@@ -140,7 +169,6 @@ def main():
         else:
             print("Escolha inválida. Por favor, digite um número entre 1 e 4.")
             time.sleep(2)
-
 
 if __name__ == "__main__":
     main()

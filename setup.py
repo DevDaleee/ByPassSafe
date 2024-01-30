@@ -2,15 +2,15 @@ from setuptools import setup, find_packages
 
 setup(
     name='ByPassSafe',
-    version='0.1',
+    version='0.4',  # Atualize o número da versão conforme necessário
     packages=find_packages(),
     install_requires=[
-        'requests',
-        'passlib',
+        'psycopg2',
+        'bcrypt',
     ],
     entry_points={
         'console_scripts': [
-            'ByPassSafe = ByPassSafe.main:main',
+            'ByPassSafe = bypassafe.main:main',
         ],
     },
 )
