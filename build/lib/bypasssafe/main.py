@@ -3,7 +3,13 @@ from ByPassSafe.account import MasterAccount, Account
 from ByPassSafe.database import Database
 from ByPassSafe.pass_gen import PasswordGenerator
 import os
+import sys
 import time
+
+"""
+Adicionando o diretório raiz do projeto ao path do Python.
+"""
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 def login(cached_email=None):
     """

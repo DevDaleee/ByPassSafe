@@ -3,7 +3,7 @@ import psycopg2
 from psycopg2 import sql
 import bcrypt
 
-from ByPassSafe.account import Account
+from bypasssafe.account import Account
 
 
 class Database:
