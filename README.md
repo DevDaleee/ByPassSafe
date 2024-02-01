@@ -1,6 +1,6 @@
 # ByPassSafe <h1>
 
-ByPassSafe is a secure password management tool built with Python and PostgreSQL.
+ByPassSafe é uma ferramente para gerenciamento de senhas, contruida em Python, durante a disciplina de Programação Orientada a Objetos 2
 
 ## Installation <h2>
 
@@ -17,20 +17,17 @@ Python3 -m ByPassSafe
 This will launch the password management tool and allow you to perform various operations.
 ~~~
 
-Features
-Secure Password Storage: ByPassSafe uses bcrypt for secure password hashing.
-Master Account: Create a master account to securely manage multiple accounts.
-Intuitive CLI Interface: Simple and user-friendly command-line interface.
+
 
 ### Getting Started <h3>
 
-1. Install the package using pip install bypassafe.
-2. Run the tool with ByPassSafe.
-3. Follow the on-screen instructions to create a master account and manage passwords.
+1. Instale a ferramenta executando o comando pip install bypasssafe
+2. Execute a ferramente no CLI com python -m bypasssafe ou use de nossas funcionalidades importando a lib.
+3. Siga as instruções para usar a lib de forma correta: Crie uma conta mestre, Acesse-a e cadastre sua conta das principais plataformas pra ter suas senhas sempre a mão, sem precisar decora-las, usando assim senhas muito mais complexas e seguras.
 
 
 <h1>Contributing</h1>
-Contributions are welcome! Please follow the contribution guidelines.
+Qualquer contribuição é bem-vinda e muito apreciada!!!
 
 <h1>License</h1>
-This project is licensed under the MIT License - see the LICENSE file for details.
+Licensa MIT padrão.
