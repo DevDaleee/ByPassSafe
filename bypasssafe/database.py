@@ -2,7 +2,7 @@
 import psycopg2
 from psycopg2 import sql
 import bcrypt
-
+from decouple import config
 from bypasssafe.account import Account
 
 
@@ -14,8 +14,8 @@ class Database:
     autenticar usuários e obter informações de uma conta por nome de usuário.
     """
 
-    DATABASE_URL = "postgres://lfusjels:57VUWL0RGqHFJEsJuYX8L3iuesufDE4n@kesavan.db.elephantsql.com/lfusjels"
-
+    DATABASE_URL = config("DATABASE_URL")
+    
     @staticmethod
     def save_account(account):
         """
