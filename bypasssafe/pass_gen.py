@@ -11,7 +11,7 @@ class PasswordGenerator:
     """
 
     @staticmethod
-    def generate_password(length, num_digits, num_symbols, uppercase):
+    def generate_password(length, num_digits, num_symbols, mix_case):
         """
         Gera uma senha aleatória com base nos parâmetros fornecidos.
 
@@ -19,13 +19,13 @@ class PasswordGenerator:
             length (int): O comprimento total da senha.
             num_digits (int): O número de dígitos na senha.
             num_symbols (int): O número de símbolos na senha.
-            uppercase (bool): Indica se a senha deve incluir letras maiúsculas.
+            mix_case (bool): Indica se a senha deve incluir letras maiúsculas.
 
         Returns:
             str: A senha gerada.
         """
         all_chars = string.ascii_letters + string.digits + string.punctuation
-        if not uppercase:
+        if not mix_case:
             all_chars = string.ascii_lowercase + string.digits + string.punctuation
 
         digits = "".join(random.choice(string.digits) for _ in range(num_digits))

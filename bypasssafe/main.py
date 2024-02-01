@@ -6,28 +6,22 @@ import os
 import sys
 import time
 import pathlib as Path
+import getpass
+import os
 
 """
 Adicionando o diretório raiz do projeto ao path do Python.
 """
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-def login(cached_email=None):
-    """
-    Realiza o processo de login do usuário.
-
-    Args:
-        cached_email (str): O email armazenado em cache. Pode ser None se não houver nenhum em cache.
-
-    Returns:
-        tuple: Uma tupla contendo o ID do mestre e o email do usuário logado. Retorna (None, None) em caso de falha no login.
-    """
+def login():
     email = input("Email: ")
-    password = input("Senha Mestre: ")
+    password = getpass.getpass("Senha Mestre: ")
 
     try:
         master_id = Database.authenticate_user(email, password)
         if master_id is not None:
+            master_id = int(master_id)  # Convert to an integer
             print("Login realizado com sucesso.")
             return master_id, email
         else:
@@ -45,7 +39,7 @@ def create_master_account():
     """
     username = input("Digite seu nome: ")
     email = input("Digite seu Email: ")
-    password = input("Digite sua senha mestra: ")
+    password = getpass.getpass("Digite sua senha mestra: ")
 
     master_account = MasterAccount(username, password, email)
 
@@ -71,7 +65,7 @@ def create_account(master_id):
     choice = input("Deseja digitar ou gerar uma senha? (1 - Digitar / 2 - Gerar): ")
 
     if choice == "1":
-        password = input("Digite a senha: ")
+        password = getpass.getpass("Digite a senha: ")
     elif choice == "2":
         password = generate_password()
     else:
@@ -98,7 +92,7 @@ def generate_password():
     print(f"Senha Gerada: {password}")
     return password
 
-def search_account(master_id, username_to_search):
+def search_account(account, username_to_search):
     """
     Procura e exibe informações sobre uma conta associada à conta mestre.
 
@@ -107,8 +101,8 @@ def search_account(master_id, username_to_search):
         username_to_search (str): O nome de usuário da conta a ser pesquisada.
     """
     try:
-        account = Database.get_account_by_username(master_id, username_to_search)
-        if account:
+        account = Database.get_account_by_username(account[0], username_to_search)
+        if account.username == username_to_search:
             print(f"Informações da Conta:")
             print(f"Nome: {account.username}")
             print(f"Email: {account.email}")
@@ -122,10 +116,10 @@ def search_account(master_id, username_to_search):
         input("Pressione Enter para voltar ao menu...")
 
 def clear_console():
-    """Limpa a tela do console."""
-    os.system("cls" if os.name == "nt" else "clear")
-
-cached_email = None
+    """
+    Clears the console screen.
+    """
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def register_script():
     # Obter o caminho do script atual

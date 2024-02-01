@@ -1,9 +1,9 @@
 # database.py
 import psycopg2
 from psycopg2 import sql
-import bcrypt
 from decouple import config
 from bypasssafe.account import Account
+import bcrypt
 
 
 class Database:
@@ -18,25 +18,22 @@ class Database:
     
     @staticmethod
     def save_account(account):
-        """
-        Salva uma conta no banco de dados.
-
-        Args:
-            account (Account): A conta a ser salva no banco de dados.
-        """
         try:
             connection = psycopg2.connect(Database.DATABASE_URL)
             cursor = connection.cursor()
+            
+            master_id = int(account.master_id[0])  # Extract the first element from the tuple
 
+            # Usando parâmetros preparados para evitar injeção SQL
             create_account_query = sql.SQL(
                 "INSERT INTO accounts (master_id, username, password, email) VALUES ({}, {}, {}, {})"
             ).format(
-                sql.Literal(account.master_id),
+                sql.Literal(master_id),
                 sql.Literal(account.username),
                 sql.Literal(account.password),
                 sql.Literal(account.email),
             )
-
+            
             cursor.execute(create_account_query)
             connection.commit()
 
@@ -44,6 +41,32 @@ class Database:
 
         except Exception as e:
             print(f"Erro ao salvar conta: {e}")
+
+        finally:
+            cursor.close()
+            connection.close()
+            
+    @staticmethod
+    def save_master_account(master_account):
+        try:
+            connection = psycopg2.connect(Database.DATABASE_URL)
+            cursor = connection.cursor()
+
+            create_master_account_query = sql.SQL(
+                "INSERT INTO masters (username, email, password) VALUES ({}, {}, {})"
+            ).format(
+                sql.Literal(master_account.username),
+                sql.Literal(master_account.email),
+                sql.Literal(master_account.password),
+            )
+
+            cursor.execute(create_master_account_query)
+            connection.commit()
+
+            print("Conta mestre salva com sucesso.")
+
+        except Exception as e:
+            print(f"Erro ao salvar conta mestre: {e}")
 
         finally:
             cursor.close()
@@ -74,33 +97,33 @@ class Database:
 
     @staticmethod
     def authenticate_user(email, password):
-        """
-        Autentica um usuário comparando email e senha com o banco de dados.
+        try:
+            connection = psycopg2.connect(Database.DATABASE_URL)
+            cursor = connection.cursor()
 
-        Args:
-            email (str): O email do usuário.
-            password (str): A senha do usuário.
+            # Consulta parametrizada para obter o id do mestre e a senha codificada
+            select_master_query = sql.SQL("SELECT id, password FROM masters WHERE email = {}").format(
+                sql.Literal(email)
+            )
 
-        Returns:
-            int or None: O ID do mestre se a autenticação for bem-sucedida, None caso contrário.
-        """
-        connection = psycopg2.connect(Database.DATABASE_URL)
-        cursor = connection.cursor()
+            cursor.execute(select_master_query)
+            result = cursor.fetchone()
 
-        select_master_query = "SELECT * FROM masters WHERE email = %s"
-        cursor.execute(select_master_query, (email,))
-        master = cursor.fetchone()
+            if result and bcrypt.checkpw(password.encode(), result[1].encode()):
+                # Se a senha estiver correta, retorna o id do mestre
+                return result[0]
+            else:
+                # Senha incorreta ou usuário não encontrado
+                return None
 
-        cursor.close()
-        connection.close()
-
-        if master is not None and bcrypt.checkpw(
-            password.encode("utf-8"), master[2].encode("utf-8")
-        ):
-            return master[0]
-        else:
+        except Exception as e:
+            print(f"Um erro ocorreu durante a autenticação do usuário: {e}")
             return None
 
+        finally:
+            cursor.close()
+            connection.close()
+        
     @staticmethod
     def get_account_by_username(master_id, username):
         """
@@ -127,7 +150,7 @@ class Database:
 
         if account_data:
             account = Account(
-                account_data[0], account_data[2], account_data[3], account_data[4]
+                account_data[1], account_data[2], account_data[3], account_data[4]
             )
             return account
         else:
