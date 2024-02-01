@@ -2,7 +2,7 @@
 name = "bypasssafe"
 version = "0.6"
 description = "Valt de senhas e gerador"
-authors = ["MarcosDalessandro <marcosdalessandroclima@ufpi.edu.br>"]
+authors = ["MarcosDalessandro <marcosdalessandroclima@ufpi.edu.br>" , "MayraCaetano <mayracaetano096@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
