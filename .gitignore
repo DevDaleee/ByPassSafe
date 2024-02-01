@@ -1,2 +1,5 @@
 *.txt
 *.env
+/dist
+/ByPassSafe2.egg-info
+/build
